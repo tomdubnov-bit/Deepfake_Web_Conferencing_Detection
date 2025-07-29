@@ -1,7 +1,7 @@
 README:
 
 
-Multi-View Deepfake Integrity Check
+Silo-Sight Multi-View Deepfake Integrity Check
 
 Motivation
 In 2024, the multinational firm Arup suffered a staggering loss of approximately $25 million due to a sophisticated deepfake attack. An employee, initially suspicious of an email request, was convinced to authorize the transfers after attending a fake video conference. During the call, all participants, including the Chief Financial Officer and senior colleagues. were AI-generated deepfakes with perfectly cloned visuals. This is not an isolated case. As deepfake sophistication and access accelerates, businesses suffer
@@ -25,21 +25,21 @@ Scope: Proof of Concept
 
 Technical Stack
 1. Language: Python
-    Access to robust computer vision libraries
+    a. Access to robust computer vision libraries
 2. Video Processing: OpenCV
     Camera stream acquisition, synchronization, and the full suite of Stereo Calibration functions (cv.calibrateCamera, cv.stereoCalibrate, etc.).
 3. Feature Tracking: Dlib, Mediapipe
     Fast and accurate facial extremity detection
-4. Data/Math: NumPy
+4. Data/Math: NumPy, scipy
     High-performance numerical operations for matrix manipulation and error calculation.
 
 Output & Measure of Success
 1. Output
     Pass/Fail outcome given a threshold of 60
 2. Control
-    1 minute video of a real human looking up, down, to the left, right and speaking
+    10 Sec video of a real human looking up, down, to the left, right and speaking
 3. Deepfake Test
-    1 minute video replicating the same human looking up, down, to the left, right and speaking
+    10 Sec minute video replicating the same human looking up, down, to the left, right and speaking
 
 Long-Term Vision:
 This POC is the foundation for a more powerful, general-purpose integrity engine. The long term vision includes the following features:
