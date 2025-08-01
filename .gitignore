@@ -1,0 +1,73 @@
+# Python virtual environment
+venv/
+env/
+.venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Calibration data
+stereo_calibration.npz
+*.npz
+
+# Video and image data
+*.mp4
+*.mov
+*.avi
+*.png
+*.jpg
+*.jpeg
+!checkerboard_pattern.png  # Keep example checkerboard
+
+# Temporary files
+temp_frames/
+*.tmp
+
+# Output directories
+Calibration/output/
+Calibration/temp_frames/
+6. Output/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.local
