@@ -189,18 +189,14 @@ class FaceLandmarkDetector:
         Returns:
             dict: Mapping of landmark index to descriptive name
         """
-        # MediaPipe Face Mesh landmark names (subset)
+        # MediaPipe Face Mesh landmark names (current set: 6 rigid landmarks)
         landmark_names = {
             1: "Nose tip",
             4: "Nose bridge top",
+            199: "Nose bridge mid",
             152: "Chin",
             234: "Left forehead",
             454: "Right forehead",
-            33: "Left eye outer corner",
-            263: "Right eye outer corner",
-            61: "Left mouth corner",
-            291: "Right mouth corner",
-            199: "Nose bridge mid",
         }
 
         return {idx: landmark_names.get(idx, f"Landmark {idx}")

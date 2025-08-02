@@ -28,8 +28,8 @@ TESTING (Per Frame Pair)
 2. Landmark Detection
     a. Use MediaPipe Face Mesh on both frames
     b. Detect 468 facial landmarks in each view
-    c. Extract key landmarks (nose tip, chin, eye corners, mouth corners, etc.)
-    d. Store 2D pixel coordinates for ~10-20 key points
+    c. Extract key rigid landmarks (nose tip, nose bridge, chin, forehead)
+    d. Store 2D pixel coordinates for 6 key points (rigid bone structure only)
     Output: FV_landmarks (array of (x,y) points), SV_landmarks (array of (x,y) points)
 
 3. 3D Triangulation
