@@ -161,55 +161,6 @@ class StereoTriangulator:
 
         return points_3d.astype(np.float32)
 
-    def project_3d_to_2d(self, points_3d, camera='cam1'):
-        """
-        Project 3D points back to 2D image coordinates (reprojection).
-
-        Args:
-            points_3d (np.ndarray): Nx3 array of 3D points
-            camera (str): 'cam1' or 'cam2' to select projection matrix
-
-        Returns:
-            np.ndarray: Nx2 array of reprojected 2D points
-
-        Raises:
-            ValueError: If camera not recognized
-        """
-        if camera == 'cam1':
-            P = self.P1
-        elif camera == 'cam2':
-            P = self.P2
-        else:
-            raise ValueError(f"camera must be 'cam1' or 'cam2', got '{camera}'")
-
-        # Convert to homogeneous coordinates (Nx4: [X, Y, Z, 1])
-        n_points = len(points_3d)
-        points_3d_homogeneous = np.hstack([points_3d, np.ones((n_points, 1))])
-
-        # Project: P @ [X, Y, Z, 1]^T
-        # P is 3x4, points is Nx4, so we transpose points for matrix multiplication
-        projected_homogeneous = (P @ points_3d_homogeneous.T).T  # Nx3
-
-        # Convert from homogeneous to 2D: [x/w, y/w]
-        points_2d = projected_homogeneous[:, :2] / projected_homogeneous[:, 2:3]
-
-        return points_2d.astype(np.float32)
-
-    def reproject_landmarks(self, points_3d):
-        """
-        Reproject 3D points to both camera views.
-
-        Args:
-            points_3d (np.ndarray): Nx3 array of 3D points
-
-        Returns:
-            tuple: (reprojected_cam1, reprojected_cam2) as Nx2 arrays
-        """
-        reprojected_cam1 = self.project_3d_to_2d(points_3d, camera='cam1')
-        reprojected_cam2 = self.project_3d_to_2d(points_3d, camera='cam2')
-
-        return reprojected_cam1, reprojected_cam2
-
     def get_calibration_quality(self):
         """
         Get calibration quality metrics.
@@ -261,28 +212,6 @@ def test_triangulation(calibration_path):
 
     print(f"\n✓ 3D point: ({points_3d[0][0]:.4f}, {points_3d[0][1]:.4f}, {points_3d[0][2]:.4f}) meters")
     print(f"  Distance from cameras: {points_3d[0][2]:.2f} m")
-
-    # Reproject back
-    repr_cam1, repr_cam2 = triangulator.reproject_landmarks(points_3d)
-
-    print(f"\nReprojected points:")
-    print(f"  Camera 1: {repr_cam1[0]} (original: {landmarks_cam1[0]})")
-    print(f"  Camera 2: {repr_cam2[0]} (original: {landmarks_cam2[0]})")
-
-    # Calculate reprojection error
-    error_cam1 = np.linalg.norm(repr_cam1[0] - landmarks_cam1[0])
-    error_cam2 = np.linalg.norm(repr_cam2[0] - landmarks_cam2[0])
-    mean_error = (error_cam1 + error_cam2) / 2
-
-    print(f"\nReprojection errors:")
-    print(f"  Camera 1: {error_cam1:.3f} pixels")
-    print(f"  Camera 2: {error_cam2:.3f} pixels")
-    print(f"  Mean: {mean_error:.3f} pixels")
-
-    if mean_error < 5:
-        print(f"\n✓ Test PASSED - Low reprojection error (< 5px)")
-    else:
-        print(f"\n⚠ Test WARNING - High reprojection error (> 5px)")
 
     print("="*60)
 

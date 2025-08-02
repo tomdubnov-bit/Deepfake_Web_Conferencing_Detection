@@ -22,12 +22,14 @@ from importlib import import_module
 
 # Import detection modules
 landmark_detector_module = import_module('2D Detection.landmark_detector')
-triangulator_module = import_module('3D Estimation.triangulator')
+triangulator_module = import_module('3D Triangulation.triangulator')
+reprojector_module = import_module('2D Reprojection.reprojector')
 error_calculator_module = import_module('Comparison.error_calculator')
 scorer_module = import_module('Output.scorer')
 
 FaceLandmarkDetector = landmark_detector_module.FaceLandmarkDetector
 StereoTriangulator = triangulator_module.StereoTriangulator
+StereoReprojector = reprojector_module.StereoReprojector
 ReprojectionErrorCalculator = error_calculator_module.ReprojectionErrorCalculator
 DeepfakeScorer = scorer_module.DeepfakeScorer
 
@@ -54,6 +56,7 @@ class DeepfakeDetectionPipeline:
 
         self.detector = FaceLandmarkDetector()
         self.triangulator = StereoTriangulator(self.calibration_path)
+        self.reprojector = StereoReprojector(self.calibration_path)
         self.error_calculator = ReprojectionErrorCalculator()
         self.scorer = DeepfakeScorer()
 
@@ -139,7 +142,7 @@ class DeepfakeDetectionPipeline:
             print(f"\n{'='*70}")
             print("Step 3: Reprojecting to 2D...")
 
-        reprojected_front, reprojected_side = self.triangulator.reproject_landmarks(points_3d)
+        reprojected_front, reprojected_side = self.reprojector.reproject_to_both_cameras(points_3d)
 
         # Step 4: Calculate errors
         if self.verbose:
