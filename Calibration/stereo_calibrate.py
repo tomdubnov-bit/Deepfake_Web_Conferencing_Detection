@@ -15,9 +15,10 @@ import sys
 import argparse
 from pathlib import Path
 
-# Add parent directory to path to import config
+# Add parent directory to path to import config and modules
 sys.path.append(str(Path(__file__).parent.parent))
 import config
+from Ingestion import frame_loader
 
 class StereoCalibrator:
     """
@@ -85,49 +86,6 @@ class StereoCalibrator:
             print(f"  ✗ {camera_name}: Checkerboard not detected")
             return False, None
 
-    def extract_frames_from_video(self, video_path, output_dir, camera_name="cam1", frame_interval=15):
-        """
-        Extract frames from calibration video at regular intervals.
-
-        Args:
-            video_path (str): Path to video file
-            output_dir (str): Directory to save extracted frames
-            camera_name (str): Camera identifier
-            frame_interval (int): Extract every Nth frame
-
-        Returns:
-            list: Paths to extracted frame images
-        """
-        os.makedirs(output_dir, exist_ok=True)
-
-        cap = cv2.VideoCapture(video_path)
-        if not cap.isOpened():
-            raise ValueError(f"Cannot open video file: {video_path}")
-
-        frame_paths = []
-        frame_count = 0
-        saved_count = 0
-
-        print(f"Extracting frames from {video_path}...")
-
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            # Save every Nth frame
-            if frame_count % frame_interval == 0:
-                frame_path = os.path.join(output_dir, f"{camera_name}_frame_{saved_count:04d}.png")
-                cv2.imwrite(frame_path, frame)
-                frame_paths.append(frame_path)
-                saved_count += 1
-
-            frame_count += 1
-
-        cap.release()
-        print(f"Extracted {saved_count} frames from {frame_count} total frames")
-
-        return frame_paths
 
     def calibrate_single_camera(self, image_paths, camera_name="Camera"):
         """
@@ -388,24 +346,18 @@ def main():
     if args.cam1 and args.cam2:
         # Extract frames from videos
         print("Mode: Video input")
-        temp_dir = "2. Calibration/temp_frames"
-        images_cam1 = calibrator.extract_frames_from_video(
+        temp_dir = "Calibration/temp_frames"
+        images_cam1 = frame_loader.extract_frames_from_video(
             args.cam1, os.path.join(temp_dir, "cam1"), "cam1", args.frame_interval
         )
-        images_cam2 = calibrator.extract_frames_from_video(
+        images_cam2 = frame_loader.extract_frames_from_video(
             args.cam2, os.path.join(temp_dir, "cam2"), "cam2", args.frame_interval
         )
     elif args.cam1_dir and args.cam2_dir:
         # Use existing images
         print("Mode: Image directory input")
-        images_cam1 = sorted([
-            os.path.join(args.cam1_dir, f) for f in os.listdir(args.cam1_dir)
-            if f.lower().endswith(('.png', '.jpg', '.jpeg'))
-        ])
-        images_cam2 = sorted([
-            os.path.join(args.cam2_dir, f) for f in os.listdir(args.cam2_dir)
-            if f.lower().endswith(('.png', '.jpg', '.jpeg'))
-        ])
+        images_cam1 = frame_loader.load_images_from_directory(args.cam1_dir)
+        images_cam2 = frame_loader.load_images_from_directory(args.cam2_dir)
     else:
         parser.print_help()
         sys.exit(1)

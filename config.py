@@ -4,6 +4,7 @@ All parameters and constants used across the system
 """
 
 import numpy as np
+import cv2
 
 # ============================================================================
 # CALIBRATION PARAMETERS
@@ -171,9 +172,3 @@ def is_deepfake(confidence_score):
     return confidence_score < HUMAN_CONFIDENCE_CUTOFF
 
 
-# Import cv2 at the end to avoid circular dependencies in other modules
-try:
-    import cv2
-except ImportError:
-    print("Warning: OpenCV not installed. Some config parameters may not work.")
-    cv2 = None
