@@ -276,3 +276,114 @@ def resize_frame(frame, target_size=None, scale_factor=None):
         raise ValueError("Must provide either target_size or scale_factor")
 
     return resized
+
+
+def split_side_by_side_image(image_path, output_dir=None, names=('cam1', 'cam2')):
+    """
+    Split a side-by-side image (e.g., Zoom screenshot) into two separate images.
+
+    Args:
+        image_path (str): Path to side-by-side image
+        output_dir (str): Directory to save split images (None = don't save)
+        names (tuple): Names for left and right images
+
+    Returns:
+        tuple: (left_image, right_image) as numpy arrays
+
+    Raises:
+        FileNotFoundError: If image doesn't exist
+        ValueError: If image width is odd (can't split evenly)
+    """
+    if not os.path.exists(image_path):
+        raise FileNotFoundError(f"Image not found: {image_path}")
+
+    image = cv2.imread(image_path)
+    if image is None:
+        raise ValueError(f"Failed to load image: {image_path}")
+
+    height, width = image.shape[:2]
+
+    # Check if width is even
+    if width % 2 != 0:
+        raise ValueError(
+            f"Image width ({width}) is odd - cannot split evenly. "
+            f"Crop image to even width first."
+        )
+
+    # Split down the middle
+    mid = width // 2
+    left_image = image[:, :mid]      # Left half
+    right_image = image[:, mid:]     # Right half
+
+    # Save if output directory provided
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+
+        left_path = os.path.join(output_dir, f"{names[0]}.png")
+        right_path = os.path.join(output_dir, f"{names[1]}.png")
+
+        cv2.imwrite(left_path, left_image)
+        cv2.imwrite(right_path, right_image)
+
+        print(f"✓ Split image saved:")
+        print(f"  Left ({names[0]}): {left_path}")
+        print(f"  Right ({names[1]}): {right_path}")
+
+    return left_image, right_image
+
+
+def load_and_split_zoom_screenshot(screenshot_path, camera_layout='side_by_side',
+                                   front_camera='left'):
+    """
+    Load a Zoom screenshot and extract front view and side view cameras.
+
+    Args:
+        screenshot_path (str): Path to Zoom screenshot
+        camera_layout (str): 'side_by_side' (left/right) or 'stacked' (top/bottom)
+        front_camera (str): 'left' or 'right' for side_by_side, 'top' or 'bottom' for stacked
+
+    Returns:
+        tuple: (frame_front, frame_side) as numpy arrays
+
+    Raises:
+        ValueError: If camera_layout or front_camera is invalid
+    """
+    if camera_layout == 'side_by_side':
+        left, right = split_side_by_side_image(screenshot_path)
+
+        if front_camera == 'left':
+            frame_front, frame_side = left, right
+        elif front_camera == 'right':
+            frame_front, frame_side = right, left
+        else:
+            raise ValueError(f"front_camera must be 'left' or 'right', got '{front_camera}'")
+
+    elif camera_layout == 'stacked':
+        # Top/bottom split
+        image = cv2.imread(screenshot_path)
+        if image is None:
+            raise ValueError(f"Failed to load image: {screenshot_path}")
+
+        height = image.shape[0]
+        if height % 2 != 0:
+            raise ValueError(f"Image height ({height}) is odd - cannot split evenly")
+
+        mid = height // 2
+        top = image[:mid, :]
+        bottom = image[mid:, :]
+
+        if front_camera == 'top':
+            frame_front, frame_side = top, bottom
+        elif front_camera == 'bottom':
+            frame_front, frame_side = bottom, top
+        else:
+            raise ValueError(f"front_camera must be 'top' or 'bottom' for stacked layout")
+
+    else:
+        raise ValueError(f"camera_layout must be 'side_by_side' or 'stacked', got '{camera_layout}'")
+
+    print(f"✓ Loaded Zoom screenshot:")
+    print(f"  Front view: {frame_front.shape}")
+    print(f"  Side view: {frame_side.shape}")
+
+    return frame_front, frame_side
