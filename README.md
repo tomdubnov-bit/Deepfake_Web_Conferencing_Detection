@@ -9,7 +9,7 @@ Arup's loss proves that relying on visual recognition in 2D web conferencing env
 
 
 Solution: Silo-Sight
-Silo-Sight tackles this threat by leveraging a core weakness of deepfake technology: its struggle with geometric and 3D consistency across multiple simultaneous viewing angles. Silo-Sight acts as a "zero-trust" check for a person entering a virtual conference room. The system uses two webcams to verify the physical location of rigid facial features. The principle is simple: Facial extremities viewed from two fixed cameras must always triangulate to a single, consistent 3D point in space. A deepfake, generated in 2D, will show measurable geometric inconsistencies when attempting to reconcile the two views.
+Silo-Sight tackles this threat by leveraging a core weakness of deepfake technology: its struggle with geometric and 3D consistency across multiple simultaneous viewing angles. Silo-Sight acts as a zero-trust check for a person entering a virtual conference room. The system uses two webcams to verify the physical location of rigid facial features. The principle is simple: Facial extremities viewed from two fixed cameras must always triangulate to a single, consistent 3D point in space. A deepfake, generated in 2D, will show measurable geometric inconsistencies when attempting to reconcile the two views.
 
 
 Implementation: Proof of Concept Pipeline
