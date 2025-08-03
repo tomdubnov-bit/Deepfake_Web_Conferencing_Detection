@@ -13,11 +13,11 @@ import cv2
 # Checkerboard pattern dimensions (internal corners)
 # 8 rows x 11 columns of squares = 7x10 internal corners
 CHECKERBOARD_SIZE = (10, 7)  # (width, height) in internal corners
-SQUARE_SIZE = 0.015  # Size of each square in meters (15mm)
+SQUARE_SIZE = 0.015875  # Size of each square in meters (5/8" = 15.875mm)
 
 # Physical board dimensions (for reference)
-BOARD_WIDTH = 0.279  # 279mm in meters
-BOARD_HEIGHT = 0.216  # 216mm in meters
+BOARD_WIDTH = 0.1651  # 6.5 inches = 165.1mm in meters
+BOARD_HEIGHT = 0.12065  # 4.75 inches = 120.65mm in meters
 
 # Calibration criteria for cv2.cornerSubPix and calibration termination
 CALIBRATION_CRITERIA = (
