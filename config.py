@@ -22,7 +22,7 @@ BOARD_HEIGHT = 0.12065  # 4.75 inches = 120.65mm in meters
 # Calibration criteria for cv2.cornerSubPix and calibration termination
 CALIBRATION_CRITERIA = (
     cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER,
-    50,  # max iterations
+    30,  # max iterations
     0.001  # epsilon (convergence threshold)
 )
 
