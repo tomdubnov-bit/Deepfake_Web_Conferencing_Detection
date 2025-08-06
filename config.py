@@ -23,7 +23,7 @@ BOARD_HEIGHT = 0.12065  # 4.75 inches = 120.65mm in meters
 CALIBRATION_CRITERIA = (
     cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER,
     30,  # max iterations
-    0.0001  # epsilon (convergence threshold)
+    0.001  # epsilon (convergence threshold)
 )
 
 # Stereo calibration flags
