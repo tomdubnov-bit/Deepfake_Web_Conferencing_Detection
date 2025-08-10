@@ -85,7 +85,7 @@ DEEPFAKE_THRESHOLD = 15.0   # Above this = likely deepfake
 # Confidence score boundaries
 MIN_CONFIDENCE = 0
 MAX_CONFIDENCE = 100
-HUMAN_CONFIDENCE_CUTOFF = 70  # Above this = classified as human
+HUMAN_CONFIDENCE_CUTOFF = 75  # Above this = classified as human
 
 # ============================================================================
 # FILE PATHS
