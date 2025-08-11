@@ -110,7 +110,7 @@ COLOR_ERROR_LINE = (255, 0, 0)    # Blue for error lines
 COLOR_TEXT = (255, 255, 255)      # White for text
 
 # Marker sizes
-LANDMARK_RADIUS = 3
+LANDMARK_RADIUS = 5
 LINE_THICKNESS = 1
 TEXT_FONT = cv2.FONT_HERSHEY_SIMPLEX
 TEXT_SCALE = 0.5
